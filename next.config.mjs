@@ -8,7 +8,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com'], // Add this line
+    domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com'],
   },
   experimental: {
     webpackBuildWorker: true,
@@ -17,25 +17,5 @@ const nextConfig = {
   },
 }
 
-// Simplified merge function
-let userConfig = undefined
-try {
-  userConfig = require('./v0-user-next.config')
-} catch (e) {
-  // ignore error
-}
-
-if (userConfig) {
-  Object.keys(userConfig).forEach(key => {
-    if (typeof nextConfig[key] === 'object' && !Array.isArray(nextConfig[key])) {
-      nextConfig[key] = {
-        ...nextConfig[key],
-        ...userConfig[key],
-      }
-    } else {
-      nextConfig[key] = userConfig[key]
-    }
-  })
-}
-
-module.exports = nextConfig
+// For ES modules, we use export default instead of module.exports
+export default nextConfig
