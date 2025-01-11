@@ -1,10 +1,3 @@
-let userConfig = undefined
-try {
-  userConfig = await import('./v0-user-next.config')
-} catch (e) {
-  // ignore error
-}
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -15,6 +8,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com'], // Add this line
   },
   experimental: {
     webpackBuildWorker: true,
@@ -23,18 +17,17 @@ const nextConfig = {
   },
 }
 
-mergeConfig(nextConfig, userConfig)
+// Simplified merge function
+let userConfig = undefined
+try {
+  userConfig = require('./v0-user-next.config')
+} catch (e) {
+  // ignore error
+}
 
-function mergeConfig(nextConfig, userConfig) {
-  if (!userConfig) {
-    return
-  }
-
-  for (const key in userConfig) {
-    if (
-      typeof nextConfig[key] === 'object' &&
-      !Array.isArray(nextConfig[key])
-    ) {
+if (userConfig) {
+  Object.keys(userConfig).forEach(key => {
+    if (typeof nextConfig[key] === 'object' && !Array.isArray(nextConfig[key])) {
       nextConfig[key] = {
         ...nextConfig[key],
         ...userConfig[key],
@@ -42,7 +35,7 @@ function mergeConfig(nextConfig, userConfig) {
     } else {
       nextConfig[key] = userConfig[key]
     }
-  }
+  })
 }
 
-export default nextConfig
+module.exports = nextConfig
